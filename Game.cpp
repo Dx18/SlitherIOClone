@@ -1,46 +1,54 @@
 #include "Engine.h"
-#include <stdlib.h>
-#include <memory.h>
 
-#include <stdio.h>
+#include "Camera.h"
+#include "Fruits.h"
+#include "PlayArea.h"
+#include "PlayerCameraController.h"
+#include "Renderer.h"
+#include "Snakes.h"
 
-//
-//  You are free to modify this file
-//
+PlayArea play_area;
 
-//  is_key_pressed(int button_vk_code) - check if a key is pressed,
-//                                       use keycodes (VK_SPACE, VK_RIGHT, VK_LEFT, VK_UP, VK_DOWN, VK_RETURN)
-//
-//  get_cursor_x(), get_cursor_y() - get mouse cursor position
-//  is_mouse_button_pressed(int button) - check if mouse button is pressed (0 - left button, 1 - right button)
-//  schedule_quit_game() - quit game after act()
+Renderer renderer(reinterpret_cast<uint32_t *>(buffer), SCREEN_WIDTH, SCREEN_HEIGHT);
 
+Camera camera;
 
-// initialize game data in this function
+PlayerCameraController player_camera_controller;
+
+Fruits fruits;
+
+Snakes snakes;
+
 void initialize()
 {
+  camera.view_scale = 16.0;
 }
 
-// this function is called to update game data,
-// dt - time elapsed since the previous update (in seconds)
 void act(float dt)
 {
   if (is_key_pressed(VK_ESCAPE))
+  {
     schedule_quit_game();
+  }
 
+  fruits.Act(dt);
+
+  snakes.Act(dt, fruits);
+
+  player_camera_controller.Act(dt, camera, snakes);
 }
 
-// fill buffer in this function
-// uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH] - is an array of 32-bit colors (8 bits per R, G, B)
 void draw()
 {
-  // clear backbuffer
-  memset(buffer, 0, SCREEN_HEIGHT * SCREEN_WIDTH * sizeof(uint32_t));
+  renderer.Clear(glm::u8vec4(30, 30, 30, 255));
 
+  play_area.Draw(renderer, camera);
+
+  fruits.Draw(renderer, camera);
+
+  snakes.Draw(renderer, camera);
 }
 
-// free game data in this function
 void finalize()
 {
 }
-
