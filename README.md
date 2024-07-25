@@ -1,7 +1,6 @@
 # Game Template (Linux)
 
-A simple framework for prototyping games. \
-The framework provides a video buffer and simple keyboard and mouse input.
+Simple [slither.io](slither.io) clone.
 
 ### Build
 ``sudo apt install g++ cmake libx11-dev`` \
